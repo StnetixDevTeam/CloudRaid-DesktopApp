@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.PlusMinusSlider?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutX="154.0" layoutY="68.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
+         <children>
+            <Label text="GoogleDrive" textFill="#1c9bcd">
+               <font>
+                  <Font name="Verdana" size="18.0" />
+               </font>
+               <graphic>
+                  <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@google_drive-large.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Label>
+            <GridPane>
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="284.0" minWidth="10.0" prefWidth="80.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="494.0" minWidth="10.0" prefWidth="185.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Всего места:" />
+                  <Label text="Занято:" GridPane.rowIndex="1" />
+                  <Label text="10 Gb" GridPane.columnIndex="1" />
+                  <Label text="5 Gb" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <AnchorPane prefHeight="30.0" prefWidth="50.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <children>
+                        <PlusMinusSlider prefWidth="145.0" />
+                     </children>
+                     <GridPane.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </GridPane.margin>
+                  </AnchorPane>
+                  <Label text="Использовать:" GridPane.rowIndex="2" />
+               </children>
+               <padding>
+                  <Insets left="5.0" right="10.0" />
+               </padding>
+            </GridPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>
