@@ -24,6 +24,7 @@ import sample.model.Folder;
 import sample.model.MyFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -55,7 +56,7 @@ public class Controller implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        setAccountView();
+
         setItems();
         setAccountsListView();
         ImageView rootIcon = new ImageView(new Image(getClass().getResourceAsStream("folderSmall.png")));
@@ -82,14 +83,16 @@ public class Controller implements Initializable {
         currentItems.addAll(items);
 
         showFileBrouser();
-
+        setAccountView();
 
     }
 
     public void setAccountView(){
-        FXMLLoader loader = new FXMLLoader();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("accoutView.fxml"));
+
+
         try {
-            rootAccountPane = loader.load(getClass().getResource("accoutView.fxml"));
+            rootAccountPane = loader.load();
         } catch (IOException e) {
             e.printStackTrace();
         }
