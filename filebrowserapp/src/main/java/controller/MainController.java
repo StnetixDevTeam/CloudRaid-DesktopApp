@@ -34,7 +34,9 @@ import java.util.ResourceBundle;
 
 
 /**
- * Created by Anton on 16.06.2016.
+ *Основной контроллер файлового браузера
+ *
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class MainController implements Initializable {
 

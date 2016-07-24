@@ -4,7 +4,7 @@ import javafx.collections.ObservableList;
 
 
 /**
- *Interface для класса-прослойки для работы с файловой системой
+ *Interface (DAO) для класса-прослойки для работы с файловой системой
  *
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */

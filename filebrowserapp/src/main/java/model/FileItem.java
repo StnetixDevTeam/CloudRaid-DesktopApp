@@ -3,7 +3,9 @@ package model;
 import java.util.Date;
 
 /**
- * Created by Anton on 19.06.2016.
+ *Interface для представления элемента файловой системы в browserApp
+ *
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public interface FileItem {
     public long getId();
