@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="Sqlite (Xerial) - db1.s3db" uuid="e09735a2-3fb5-4246-aafb-bdd71eba4f44">
+    <database-info product="SQLite" version="3.8.9" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
+    <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
+    <database-model serializer="dbm" rdbms="SQLITE" format-version="2.6">
+      <schema id="1">
+        <visible>1</visible>
+      </schema>
+      <table id="2" parent="1" name="filesystem"/>
+      <table id="3" parent="1" name="hibernate_sequence"/>
+      <table id="4" parent="1" name="persons"/>
+      <column id="5" parent="2" name="ID">
+        <mandatory>1</mandatory>
+        <data-type>BIGINT(0,-1)|4</data-type>
+      </column>
+      <column id="6" parent="2" name="HASH">
+        <data-type>VARCHAR(0,-1)|12</data-type>
+      </column>
+      <column id="7" parent="2" name="IS_DELETED">
+        <data-type>INTEGER(0,-1)|4</data-type>
+      </column>
+      <column id="8" parent="2" name="IS_DIR">
+        <data-type>INTEGER(0,-1)|4</data-type>
+      </column>
+      <column id="9" parent="2" name="MODIFIED">
+        <data-type>TIMESTAMP(0,-1)|12</data-type>
+      </column>
+      <column id="10" parent="2" name="NAME">
+        <data-type>VARCHAR(0,-1)|12</data-type>
+      </column>
+      <column id="11" parent="2" name="PATH">
+        <data-type>VARCHAR(0,-1)|12</data-type>
+      </column>
+      <column id="12" parent="2" name="PHOTO_INFO">
+        <data-type>VARCHAR(0,-1)|12</data-type>
+      </column>
+      <column id="13" parent="2" name="SIZE">
+        <data-type>BIGINT(0,-1)|4</data-type>
+      </column>
+      <column id="14" parent="2" name="THUMB_EXIST">
+        <data-type>INTEGER(0,-1)|4</data-type>
+      </column>
+      <column id="15" parent="2" name="UID">
+        <data-type>BIGINT(0,-1)|4</data-type>
+      </column>
+      <column id="16" parent="2" name="VIDEO_INFO">
+        <data-type>VARCHAR(0,-1)|12</data-type>
+      </column>
+      <column id="17" parent="2" name="PARENT">
+        <data-type>BIGINT(0,-1)|4</data-type>
+      </column>
+      <key id="18" parent="2">
+        <columns>ID</columns>
+        <primary>1</primary>
+      </key>
+      <column id="19" parent="3" name="next_val">
+        <data-type>BIGINT(0,-1)|4</data-type>
+      </column>
+      <column id="20" parent="4" name="id">
+        <mandatory>1</mandatory>
+        <data-type>INTEGER(0,-1)|4</data-type>
+      </column>
+      <column id="21" parent="4" name="name">
+        <data-type>VARCHAR(0,-1)|12</data-type>
+      </column>
+      <key id="22" parent="4">
+        <columns>id</columns>
+        <primary>1</primary>
+      </key>
+    </database-model>
+  </data-source>
+  <data-source name="hibernate.cfg.xml/Hibernate" uuid="5be4f419-41ae-4d1b-a6ac-79b70dca2418">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+</component>
