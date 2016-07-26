@@ -37,7 +37,7 @@ public class SyncManagerController {
 
     public void initTreeView(){
 
-        CheckBoxTreeItem<FileItem> root = new CheckBoxTreeItem<FileItem>((FileItem) dataManager.getRoot());
+        CheckBoxTreeItem<FileItem> root = new CheckBoxTreeItem<>( dataManager.getRoot());
         setTreeChildren(root);
         treeView = new CheckTreeView<>(root);
         treeViewPane.getChildren().add(treeView);
@@ -51,7 +51,7 @@ public class SyncManagerController {
         CopyOnWriteArrayList<FileItem> items = new CopyOnWriteArrayList<>(dataManager.getContent(parentItem));
         for (FileItem i :items) {
             if (i.isDir()){
-                CheckBoxTreeItem<FileItem> item = new CheckBoxTreeItem<FileItem>(i);
+                CheckBoxTreeItem<FileItem> item = new CheckBoxTreeItem<>(i);
                 parent.getChildren().add(item);
                 setTreeChildren(item);
             }
