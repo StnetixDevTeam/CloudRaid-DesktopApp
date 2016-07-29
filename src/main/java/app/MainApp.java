@@ -19,24 +19,22 @@ import javax.persistence.EntityManager;
 
 public class MainApp extends Application {
 
-    private ObservableList<FileItem> items;
     private DAOFileItem dataManager;
     private Stage primaryStage;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
 
 
         EntityManager entityManager = EntityUtil.setUp().createEntityManager();
         DAOFactory daoFactory = DAOFactory.getInstance(entityManager);
         dataManager = daoFactory.getDAOFileItem();
         this.primaryStage = primaryStage;
-        items = FXCollections.observableArrayList();
 
         //dataManager = new DAOFileItemImpl(entityManager);
 
         BrowserApp browserApp = new BrowserApp(dataManager, primaryStage);
-        items = browserApp.getItems();
+        ObservableList<FileItem> items = browserApp.getItems();
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../view/main.fxml"));
@@ -65,11 +63,11 @@ public class MainApp extends Application {
         });
     }
 
-    public DAOFileItem getDataManager(){
+    public DAOFileItem getDataManager() {
         return dataManager;
     }
 
-    public Stage getPrimaryStage(){
+    public Stage getPrimaryStage() {
         return primaryStage;
     }
 
