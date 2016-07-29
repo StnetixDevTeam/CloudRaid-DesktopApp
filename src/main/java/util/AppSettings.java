@@ -1,10 +1,6 @@
 package util;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
 import java.util.Properties;
 
 /**Класс для работы с настройками приложения
@@ -15,34 +11,40 @@ import java.util.Properties;
  */
 
 public class AppSettings {
+
     public enum PROPERTIES_KEYS {
         SINCHRONIZATION_PATH
     }
 
     private static final String PROPERTIES_FILE_NAME = "main.ini";
-    public static Properties properties = new Properties();
-    public static Map<PROPERTIES_KEYS, String> prop = new HashMap<>();
+    private static Properties properties = new Properties();
 
     public static void loadProperties(){
+
         try {
             properties.load(new FileInputStream(AppSettings.class.getResource("../"+PROPERTIES_FILE_NAME).getFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-        prop.put(PROPERTIES_KEYS.SINCHRONIZATION_PATH, properties.getProperty(PROPERTIES_KEYS.SINCHRONIZATION_PATH.name()));
     }
+
+    public static String getProperty(PROPERTIES_KEYS key){
+        return properties.getProperty(key.toString());
+    }
+
     public static void saveProperties(){
-        /**
-         * TODO реализовать сохранение настроек. если не вызывать метод, настройки не сохраняются
-         */
+
+        try {
+            FileWriter writer = new FileWriter(AppSettings.class.getResource("../"+PROPERTIES_FILE_NAME).getFile());
+            properties.store(writer, "");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
     public static void setProperty(PROPERTIES_KEYS key, String val){
-        prop.put(key,val);
+
+        properties.setProperty(key.toString(), val);
     }
-
-
-
-
 
 
 }
