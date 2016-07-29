@@ -3,7 +3,6 @@ package app;
 import browserApp.BrowserApp;
 import controller.MainAppController;
 import javafx.application.Application;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,6 +14,10 @@ import model.DAOFileItem;
 import model.FileItem;
 import util.EntityUtil;
 
+/**
+ *Start point
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
+ */
 import javax.persistence.EntityManager;
 
 public class MainApp extends Application {
