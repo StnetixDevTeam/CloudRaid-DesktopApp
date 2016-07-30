@@ -14,12 +14,16 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.CloudSettings;
 import model.DAOFileItem;
+import util.AppSettings;
 import util.CloudSettingsManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -28,9 +32,10 @@ import java.util.ResourceBundle;
  * Created by Anton on 02.07.2016.
  */
 public class SettingsController implements Initializable{
-    CloudSettingsManager settingsMananger = new CloudSettingsManager();
+    CloudSettingsManager settingsMananger;
     Stage settingsStage;
     DAOFileItem dataManager;
+    AppSettings appSettings;
 
     @FXML
     AnchorPane accountsTreePane;
@@ -52,6 +57,9 @@ public class SettingsController implements Initializable{
 
     @FXML
     private Label cloudNameLable;
+
+    @FXML
+    private Label syncFolderPathLable;
 
     @FXML
     private void addAccountHandler(ActionEvent event){
@@ -104,10 +112,47 @@ public class SettingsController implements Initializable{
         }
     }
 
+    /**
+     * Метод открывает диалолговое окно для выбора папки синхронизации на диске
+     */
+    @FXML
+    public void openSyncFileBrowser(){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        directoryChooser.setTitle("Synchronization folder");
+        //fileChooser.getExtensionFilters().addAll();
+        File selectedFile = directoryChooser.showDialog(settingsStage);
+        if (selectedFile != null) {
+            setSyncFolder(selectedFile);
+            setSyncFolderPathLable();
+        }
+    }
+
+    @FXML
+    void applySettingsHandler(ActionEvent event) {
+        appSettings.saveProperties();
+    }
+
+    @FXML
+    void cancelSettingsHandler(ActionEvent event) {
+        settingsStage.close();
+        appSettings.reload();
+    }
+
+    @FXML
+    void saveSettingsHandler(ActionEvent event) {
+        applySettingsHandler(event);
+        settingsStage.close();
+    }
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        appSettings = AppSettings.getInstance();
+        settingsMananger = new CloudSettingsManager();
         initAccountsTreeView();
+        setSyncFolderPathLable();
+
 
     }
 
@@ -178,6 +223,16 @@ public class SettingsController implements Initializable{
             i++;
         }
     }
+
+    private void setSyncFolder(File fileOnDisc){
+        appSettings.setProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH, fileOnDisc.toString());
+    }
+
+    private void setSyncFolderPathLable(){
+        syncFolderPathLable.setText(appSettings.getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH));
+    }
+
+
     public void setSettingsStage(Stage stage){
         settingsStage = stage;
     }

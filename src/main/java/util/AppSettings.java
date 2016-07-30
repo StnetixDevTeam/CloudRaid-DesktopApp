@@ -18,21 +18,25 @@ public class AppSettings {
 
     private final String PROPERTIES_FILE_NAME = "main.ini";
     private Properties properties = new Properties();
-    public AppSettings instance = null;
+    private static AppSettings instance = null;
 
     private AppSettings(){
+        reload();
+    }
+
+    public static synchronized AppSettings getInstance(){
+        if (instance == null){
+            instance = new AppSettings();
+        }
+        return instance;
+    }
+
+    public void reload(){
         try {
             properties.load(new FileInputStream(AppSettings.class.getResource("../"+PROPERTIES_FILE_NAME).getFile()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public synchronized AppSettings getInstance(){
-        if (instance == null){
-            instance = new AppSettings();
-        }
-        return instance;
     }
 
 
