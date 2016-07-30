@@ -59,4 +59,8 @@ public interface FileItem {
     public String getName();
 
     public void setName(String name);
+
+    public boolean isSync();
+
+    public void setSync(boolean sync);
 }

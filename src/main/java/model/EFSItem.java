@@ -53,6 +53,9 @@ public class EFSItem implements FileItem, Comparable<EFSItem>{
     @JoinColumn(name = "PARENT")
     private EFSItem parent;
 
+    @Column(name = "SYNC")
+    private boolean sync;
+
     public EFSItem(){
 
     }
@@ -193,6 +196,16 @@ public class EFSItem implements FileItem, Comparable<EFSItem>{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean isSync() {
+        return sync;
+    }
+
+    @Override
+    public void setSync(boolean sync) {
+        this.sync = sync;
     }
 
 
