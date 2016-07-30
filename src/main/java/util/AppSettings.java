@@ -16,11 +16,11 @@ public class AppSettings {
         SINCHRONIZATION_PATH
     }
 
-    private static final String PROPERTIES_FILE_NAME = "main.ini";
-    private static Properties properties = new Properties();
+    private final String PROPERTIES_FILE_NAME = "main.ini";
+    private Properties properties = new Properties();
+    public AppSettings instance = null;
 
-    public static void loadProperties(){
-
+    private AppSettings(){
         try {
             properties.load(new FileInputStream(AppSettings.class.getResource("../"+PROPERTIES_FILE_NAME).getFile()));
         } catch (IOException e) {
@@ -28,11 +28,19 @@ public class AppSettings {
         }
     }
 
-    public static String getProperty(PROPERTIES_KEYS key){
+    public synchronized AppSettings getInstance(){
+        if (instance == null){
+            instance = new AppSettings();
+        }
+        return instance;
+    }
+
+
+    public String getProperty(PROPERTIES_KEYS key){
         return properties.getProperty(key.toString());
     }
 
-    public static void saveProperties(){
+    public void saveProperties(){
 
         try {
             FileWriter writer = new FileWriter(AppSettings.class.getResource("../"+PROPERTIES_FILE_NAME).getFile());
@@ -41,7 +49,7 @@ public class AppSettings {
             e.printStackTrace();
         }
     }
-    public static void setProperty(PROPERTIES_KEYS key, String val){
+    public void setProperty(PROPERTIES_KEYS key, String val){
 
         properties.setProperty(key.toString(), val);
     }
