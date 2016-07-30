@@ -3,7 +3,6 @@ package controller;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
@@ -16,8 +15,6 @@ import org.controlsfx.control.CheckTreeView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.function.Consumer;
 
 /**
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
@@ -54,13 +51,13 @@ public class SyncManagerController {
         checkedItems.forEach(fileItem -> {
             fileItem.setSync(true);
             dataManager.update(fileItem);
-            checkedItems.remove(fileItem);
         });
         unCheckedItems.forEach(fileItem -> {
             fileItem.setSync(false);
             dataManager.update(fileItem);
-            unCheckedItems.remove(fileItem);
         });
+        checkedItems.clear();
+        unCheckedItems.clear();
     }
 
     void setDataManager(DAOFileItem dataManager){
@@ -98,9 +95,11 @@ public class SyncManagerController {
 
             for (TreeItem i : c.getAddedSubList()){
                 checkedItems.add((FileItem) i.getValue());
+                unCheckedItems.remove(i.getValue());
             }
             for (TreeItem i : c.getRemoved()){
                 unCheckedItems.add((FileItem) i.getValue());
+                checkedItems.remove(i.getValue());
             }
 
 
