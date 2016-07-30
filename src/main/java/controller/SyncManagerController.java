@@ -118,6 +118,11 @@ public class SyncManagerController {
                 parent.getChildren().add(item);
                 setTreeChildren(item);
                 if (i.isSync()){
+                    /*
+                    нельзя сразу сделать setSelected(true) для элемента
+                    ибо к ним не привяжется слушатель. Поэтому вначале добавляю их в список
+                    и после инициализации TreeView делаю их selected
+                     */
                     selected.add(item);
                 }
             }
