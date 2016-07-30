@@ -101,6 +101,7 @@ public class SettingsController implements Initializable{
             Stage stage = new Stage();
             ((SyncManagerController)loader.getController()).setDataManager(dataManager);
             ((SyncManagerController)loader.getController()).init();
+            ((SyncManagerController)loader.getController()).setStage(stage);
             stage.setTitle("Sync settings");
             stage.initModality(Modality.WINDOW_MODAL);
             stage.initOwner(settingsStage);

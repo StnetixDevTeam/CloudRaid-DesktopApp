@@ -3,18 +3,20 @@ package controller;
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import model.DAOFileItem;
 import model.FileItem;
 import org.controlsfx.control.CheckTreeView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 
 /**
@@ -22,7 +24,14 @@ import java.util.function.Consumer;
  */
 public class SyncManagerController {
     private DAOFileItem dataManager;
-    private List<FileItem> addedItems;
+    private List<FileItem> checkedItems;
+    private List<FileItem> unCheckedItems;
+    private List<CheckBoxTreeItem<FileItem>> selected;
+    private Stage stage;
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
     @FXML
     private AnchorPane treeViewPane;
@@ -31,14 +40,26 @@ public class SyncManagerController {
 
     @FXML
     void cancelHandler(ActionEvent event) {
-
+        stage.close();
     }
 
     @FXML
     void saveHandler(ActionEvent event) {
-        addedItems.forEach(fileItem -> {
+        applyHandler(event);
+        stage.close();
+    }
+
+    @FXML
+    void applyHandler(ActionEvent e){
+        checkedItems.forEach(fileItem -> {
             fileItem.setSync(true);
             dataManager.update(fileItem);
+            checkedItems.remove(fileItem);
+        });
+        unCheckedItems.forEach(fileItem -> {
+            fileItem.setSync(false);
+            dataManager.update(fileItem);
+            unCheckedItems.remove(fileItem);
         });
     }
 
@@ -56,16 +77,33 @@ public class SyncManagerController {
         treeView.setShowRoot(true);
         treeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         treeView.getCheckModel().getCheckedItems().addListener(this::onCheckListener);
+        selected.forEach(item -> item.setSelected(true));
 
     }
 
     private void onCheckListener(ListChangeListener.Change<? extends TreeItem<FileItem>> c){
+
         while (c.next()){
-            if (c.wasAdded()){
-                for (TreeItem i : c.getAddedSubList()){
-                    addedItems.add((FileItem) i.getValue());
-                }
+
+            ///test section
+            System.out.println("============================================");
+            System.out.println("Change: " + c);
+            System.out.println("Added sublist " + c.getAddedSubList());
+            System.out.println("Removed sublist " + c.getRemoved());
+            System.out.println("List " + c.getList());
+            System.out.println("Added " + c.wasAdded() + " Permutated " + c.wasPermutated() + " Removed " + c.wasRemoved() + " Replaced "
+                    + c.wasReplaced() + " Updated " + c.wasUpdated());
+            System.out.println("============================================");
+            ///////////////////////
+
+            for (TreeItem i : c.getAddedSubList()){
+                checkedItems.add((FileItem) i.getValue());
             }
+            for (TreeItem i : c.getRemoved()){
+                unCheckedItems.add((FileItem) i.getValue());
+            }
+
+
         }
 
     }
@@ -76,20 +114,24 @@ public class SyncManagerController {
         for (FileItem i :items) {
             if (i.isDir()){
                 CheckBoxTreeItem<FileItem> item = new CheckBoxTreeItem<>(i);
-                if (i.isSync()){
-                     item.setSelected(true);
-                }
+
                 parent.getChildren().add(item);
                 setTreeChildren(item);
+                if (i.isSync()){
+                    selected.add(item);
+                }
             }
 
 
         }
     }
     public void init(){
-        addedItems = new ArrayList<>();
+        checkedItems = new ArrayList<>();
+        unCheckedItems = new ArrayList<>();
+        selected = new ArrayList<>();
         initTreeView();
     }
+
 
 
 }

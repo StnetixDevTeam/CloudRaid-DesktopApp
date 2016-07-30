@@ -21,9 +21,10 @@
          </children>
       </TextFlow>
       <AnchorPane fx:id="treeViewPane" layoutX="15.0" layoutY="100.0" prefHeight="420.0" prefWidth="470.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="100.0" />
-      <ButtonBar layoutX="285.0" layoutY="546.0" prefHeight="40.0" prefWidth="200.0">
+      <ButtonBar layoutX="221.0" layoutY="546.0" prefHeight="40.0" prefWidth="200.0">
         <buttons>
           <Button mnemonicParsing="false" onAction="#cancelHandler" text="Cancel" />
+            <Button mnemonicParsing="false" onAction="#applyHandler" text="Apply" />
             <Button mnemonicParsing="false" onAction="#saveHandler" text="Save" />
         </buttons>
       </ButtonBar>
