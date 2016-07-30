@@ -20,7 +20,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.function.Consumer;
 
 /**
- * Created by Anton on 05.07.2016.
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class SyncManagerController {
     private DAOFileItem dataManager;
@@ -29,7 +29,7 @@ public class SyncManagerController {
     private List<CheckBoxTreeItem<FileItem>> selected;
     private Stage stage;
 
-    public void setStage(Stage stage) {
+    void setStage(Stage stage) {
         this.stage = stage;
     }
 
@@ -63,7 +63,7 @@ public class SyncManagerController {
         });
     }
 
-    public void setDataManager(DAOFileItem dataManager){
+    void setDataManager(DAOFileItem dataManager){
         this.dataManager = dataManager;
     }
 
@@ -130,7 +130,7 @@ public class SyncManagerController {
 
         }
     }
-    public void init(){
+    void init(){
         checkedItems = new ArrayList<>();
         unCheckedItems = new ArrayList<>();
         selected = new ArrayList<>();
