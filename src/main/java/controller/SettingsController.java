@@ -87,6 +87,9 @@ public class SettingsController implements Initializable{
         }
     }
 
+    /**
+     * Метод открывает диалог выбора синхронизуемых папок из EFS на диск
+     */
     @FXML
     void openSyncManagerHandler(){
         try {
@@ -127,17 +130,32 @@ public class SettingsController implements Initializable{
         }
     }
 
+
+    /**
+     * метод сохраняет настройки
+     * @param event
+     *
+     */
     @FXML
     void applySettingsHandler(ActionEvent event) {
         appSettings.saveProperties();
     }
 
+    /**
+     * Метод закрывает окно настроек и отменяет изменения
+     * @param event
+     */
     @FXML
     void cancelSettingsHandler(ActionEvent event) {
         settingsStage.close();
         appSettings.reload();
     }
 
+
+    /**
+     * Метод сохраняет настройки и закрывает окно
+     * @param event
+     */
     @FXML
     void saveSettingsHandler(ActionEvent event) {
         applySettingsHandler(event);
