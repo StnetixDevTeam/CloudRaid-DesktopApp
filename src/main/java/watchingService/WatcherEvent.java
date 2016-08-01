@@ -1,26 +1,31 @@
 package watchingService;
 
 import java.nio.file.Path;
-import java.nio.file.WatchEvent;
+
 
 /**
  * Объект события, который передаётся слушателю
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class WatcherEvent {
-    private Path file;
-    private WatchEvent.Kind<?> eventType;
+    enum EVENT_TYPES{
+        ENTRY_CREATE, ENTRY_MODIFY,ENTRY_DELETE;
+    }
 
-    public WatcherEvent(Path file, WatchEvent.Kind<?> eventType){
+    private Path file;
+    private String eventType;
+
+    public WatcherEvent(Path file, String eventType){
         this.file = file;
         this.eventType = eventType;
+
     }
 
     public Path getFile(){
         return file;
     }
 
-    public WatchEvent.Kind<?>  getEventType(){
+    public String  getEventType(){
         return eventType;
     }
 }

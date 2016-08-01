@@ -4,106 +4,159 @@ import util.AppSettings;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
  * Сервис для отслеживания изменений в папке синхронизации на диске
+ *
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
-public class DirectoryWatcher implements Runnable{
+public class DirectoryWatcher {
 
 
     private Path watchingFile;
     private static DirectoryWatcher instance = null;
     private List<ChangeSyncFolderListener> listeners;
+    private final WatchService watcher;
+    private final Map<WatchKey, Path> keys;
+    private boolean trace = false;
 
 
-    private DirectoryWatcher(){
+    private DirectoryWatcher() throws IOException {
         listeners = new ArrayList<>();
+        this.watcher = FileSystems.getDefault().newWatchService();
+        this.keys = new HashMap<>();
         initPath();
+        registerAll(watchingFile);
+        this.trace = true;
+
     }
 
-    private void initPath(){
+    private void initPath() {
         watchingFile = Paths.get(AppSettings.getInstance().getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH));
     }
 
-    public static synchronized DirectoryWatcher getInstance(){
+    public static synchronized DirectoryWatcher getInstance() throws IOException {
         if (instance == null) instance = new DirectoryWatcher();
         return instance;
     }
 
+    private void register(Path dir) throws IOException {
+        WatchKey key = dir.register(watcher, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
+        if (trace) {
+            Path prev = keys.get(key);
+            if (prev == null) {
+                System.out.format("register: %s\n", dir);
+            } else {
+                if (!dir.equals(prev)) {
+                    System.out.format("update: %s -> %s\n", prev, dir);
+                }
+            }
+        }
+        keys.put(key, dir);
+    }
+
+    private void registerAll(final Path start) throws IOException {
+        // register directory and sub-directories
+        Files.walkFileTree(start, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs)
+                    throws IOException {
+                register(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
     @SuppressWarnings("unchecked")
-    private void doWatch()
+    static <T> WatchEvent<T> cast(WatchEvent<?> event) {
+        return (WatchEvent<T>) event;
+    }
+
+    public void doWatch()
             throws IOException, InterruptedException {
 
-        WatchService watchService = FileSystems.getDefault().newWatchService();
+        for (; ; ) {
 
-
-        WatchKey watchKey = watchingFile.register(watchService, ENTRY_DELETE, ENTRY_MODIFY, ENTRY_CREATE);
-
-        System.out.println("Watch service registered dir: " + watchingFile.toString());
-
-        for (;;) {
-
+            // wait for key to be signalled
             WatchKey key;
-
             try {
-                System.out.println("Waiting for key to be signalled...");
-                key = watchService.take();
-            }
-            catch (InterruptedException ex) {
-                System.out.println("Interrupted Exception");
+                key = watcher.take();
+            } catch (InterruptedException x) {
                 return;
             }
 
-            List<WatchEvent<?>> eventList = key.pollEvents();
-            System.out.println("Process the pending events for the key: " + eventList.size());
+            Path dir = keys.get(key);
+            if (dir == null) {
+                System.err.println("WatchKey not recognized!!");
+                continue;
+            }
 
-            for (WatchEvent<?> genericEvent: eventList) {
+            for (WatchEvent<?> event : key.pollEvents()) {
+                WatchEvent.Kind kind = event.kind();
 
-                WatchEvent.Kind<?> eventKind = genericEvent.kind();
-                System.out.println("Event kind: " + eventKind);
-                if (eventKind == OVERFLOW) {
-
-                    continue; // pending events for loop
+                if (kind == OVERFLOW) {
+                    continue;
                 }
 
-                WatchEvent pathEvent = (WatchEvent) genericEvent;
-                Path file = (Path) pathEvent.context();
-                System.out.println("File name: " + file.toString());
-                for (ChangeSyncFolderListener listener: listeners) {
-                    listener.doSome(new WatcherEvent(file, eventKind));
+                // Context for directory entry event is the file name of entry
+                WatchEvent<Path> ev = cast(event);
+                Path name = ev.context();
+                Path child = dir.resolve(name);
+
+                // print out event
+                System.out.format("%s: %s\n", event.kind().name(), child);
+
+                for (ChangeSyncFolderListener listener : listeners) {
+                    listener.doSome(new WatcherEvent(child, event.kind().name()));
+
+                }
+
+                // if directory is created, and watching recursively, then
+                // register it and its sub-directories
+                if (kind == ENTRY_CREATE) {
+                    try {
+                        if (Files.isDirectory(child, NOFOLLOW_LINKS)) {
+                            registerAll(child);
+                        }
+                    } catch (IOException x) {
+                    }
                 }
             }
 
-            boolean validKey = key.reset();
-            System.out.println("Key reset");
-            System.out.println("");
 
-            if (! validKey) {
-                System.out.println("Invalid key");
-                break; // infinite for loop
+
+            // reset key and remove from set if directory no longer accessible
+            boolean valid = key.reset();
+            if (!valid) {
+                keys.remove(key);
+
+                // all directories are inaccessible
+                if (keys.isEmpty()) {
+                    break;
+                }
             }
 
-        } // end infinite for loop
 
-        watchService.close();
-        System.out.println("Watch service closed.");
+
+        }
+        watcher.close();
     }
 
-    public void addEventListeners(ChangeSyncFolderListener listener){
+    public void close() throws IOException {
+        watcher.close();
+    }
+
+    public void addEventListeners(ChangeSyncFolderListener listener) {
         listeners.add(listener);
     }
 
-    @Override
-    public void run() {
-        try {
-            doWatch();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+
 }
