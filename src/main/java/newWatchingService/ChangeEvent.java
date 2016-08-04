@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 
 /**
- * Created by Oceanos on 03.08.2016.
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class ChangeEvent {
 

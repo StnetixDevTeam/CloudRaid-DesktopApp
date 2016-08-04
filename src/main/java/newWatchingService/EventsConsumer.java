@@ -11,15 +11,17 @@ import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
 
 /**
- * Created by Oceanos on 03.08.2016.
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class EventsConsumer implements Runnable {
     public enum EVENT_TYPES{
         RENAME, MODIFY, DELETE, CREATE
     }
 
-    Queue<ChangeEvent> queue;
-    List<ChangeSyncFolderListener> listeners;
+    private final int DELAY = 200;
+
+    private Queue<ChangeEvent> queue;
+    private List<ChangeSyncFolderListener> listeners;
 
     public EventsConsumer(Queue<ChangeEvent> queue){
         listeners = new ArrayList<>();
@@ -35,7 +37,7 @@ public class EventsConsumer implements Runnable {
     public void run() {
         while (true){
             try {
-                Thread.sleep(200);
+                Thread.sleep(DELAY);
                 if (queue.size()>1){
                     System.out.println("RENAME??");
                     ChangeEvent event1 = queue.poll();

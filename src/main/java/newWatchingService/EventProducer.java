@@ -2,8 +2,6 @@ package newWatchingService;
 
 import util.AppSettings;
 import watchingService.ChangeSyncFolderListener;
-import watchingService.DirectoryWatcher;
-import watchingService.WatcherEvent;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -14,7 +12,7 @@ import static java.nio.file.LinkOption.NOFOLLOW_LINKS;
 import static java.nio.file.StandardWatchEventKinds.*;
 
 /**
- * Created by Oceanos on 03.08.2016.
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class EventProducer implements Runnable{
     private Queue<ChangeEvent> queue;

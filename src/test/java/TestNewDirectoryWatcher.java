@@ -4,7 +4,7 @@ import newWatchingService.Service;
 import java.nio.file.Path;
 
 /**
- * Created by Oceanos on 04.08.2016.
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class TestNewDirectoryWatcher {
     public static void main(String[] args) {

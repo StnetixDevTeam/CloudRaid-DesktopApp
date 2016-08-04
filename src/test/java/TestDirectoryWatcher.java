@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Anton on 31.07.2016.
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class TestDirectoryWatcher {
     public static void main(String[] args) {
