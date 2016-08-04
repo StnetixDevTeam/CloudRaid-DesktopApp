@@ -32,6 +32,7 @@ public class DAOFileItemImpl implements DAOFileItem {
 
         entityManager = entityManagerFactory.createEntityManager();
     }
+
     public DAOFileItemImpl(EntityManager entityManager){
         this.entityManager = entityManager;
     }
@@ -144,6 +145,15 @@ public class DAOFileItemImpl implements DAOFileItem {
         System.out.println("delete");
         item.setDeleted(true);
         update(item);
+        String query = "from EFSItem where isDeleted = false and parent=" + item.getId();
+        List<FileItem> result = entityManager.createQuery( query, FileItem.class ).getResultList();
+        if (result.size()>0){
+            for (FileItem i :
+                    result) {
+                deleteItem(i);
+            }
+        }
+
 
     }
 
