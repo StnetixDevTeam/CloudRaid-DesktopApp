@@ -15,6 +15,8 @@ import java.util.concurrent.ArrayBlockingQueue;
  * DELAY. если в очереди два события и первое ENTRY_DELETE а второе ENTRY_CREATE то значет было переименование. Иначе события
  * интерпретируются как есть. DELAY подобран так что вручную удалить и создать файл так быстро не возможно.
  *
+ * TODO добавить обработку копирования, т.к. генерируются 2 события ENTRY_CREATE и ENTRY_MODIFY
+ *
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class Service {
