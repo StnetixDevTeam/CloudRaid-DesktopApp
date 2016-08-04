@@ -39,7 +39,6 @@ public class EventsConsumer implements Runnable {
             try {
                 Thread.sleep(DELAY);
                 if (queue.size()>1){
-                    System.out.println("RENAME??");
                     ChangeEvent event1 = queue.poll();
                     ChangeEvent event2 = queue.poll();
                     if (event1.getType().equals(ENTRY_DELETE)&&event2.getType().equals(ENTRY_CREATE)){
