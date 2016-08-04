@@ -105,7 +105,7 @@ public class EventProducer implements Runnable{
 
                 // print out event
                 System.out.format("%s: %s\n", event.kind().name(), child);
-
+                queue.add(new ChangeEvent(event.kind(), child));
 
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories
