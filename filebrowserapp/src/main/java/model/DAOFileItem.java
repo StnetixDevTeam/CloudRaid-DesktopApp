@@ -2,6 +2,8 @@ package model;
 
 import javafx.collections.ObservableList;
 
+import java.util.List;
+
 
 /**
  *Interface (DAO) для класса-прослойки для работы с файловой системой
@@ -25,6 +27,13 @@ public interface DAOFileItem {
      *
      * */
     void goBack();
+    /**
+     * Метод возвращает синхронизованные папки
+     * @return List<FileItem>
+     *
+     */
+    List<FileItem> getSyncDirectories();
+
 
     /**
      * Метод возвращает текущий открытый каталог
@@ -52,6 +61,12 @@ public interface DAOFileItem {
      * @param item - элемент для удаления
      */
     void deleteItem(FileItem item);
+
+    /**
+     *
+     * @return List<FileItem>
+     */
+    List<FileItem> getDeletedItems();
 
     /**
      * возвращает корневой элемент

@@ -88,6 +88,15 @@ public class DAOFileItemImpl implements DAOFileItem {
 
     }
 
+    @Override
+    public List<FileItem> getSyncDirectories() {
+        entityManager.getTransaction().begin();
+        String query = "from EFSItem where isDeleted = false and sync=true";
+        List result = entityManager.createQuery( query, FileItem.class ).getResultList();
+        entityManager.getTransaction().commit();
+        return result;
+    }
+
     public EFSItem addItem(EFSItem item){
         //EntityManager entityManager = entityManagerFactory.createEntityManager();
 
@@ -155,6 +164,15 @@ public class DAOFileItemImpl implements DAOFileItem {
         }
 
 
+    }
+
+    @Override
+    public List<FileItem> getDeletedItems() {
+        entityManager.getTransaction().begin();
+        String query = "from EFSItem where isDeleted = true";
+        List result = entityManager.createQuery( query, FileItem.class ).getResultList();
+        entityManager.getTransaction().commit();
+        return result;
     }
 
     private String setPath(){

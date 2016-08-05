@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 import model.DAOFactory;
 import model.DAOFileItem;
 import model.FileItem;
+import synchronizeService.SyncService;
+import util.AppSettings;
 import util.EntityUtil;
 
 /**
@@ -19,6 +21,8 @@ import util.EntityUtil;
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 import javax.persistence.EntityManager;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 public class MainApp extends Application {
 
@@ -26,23 +30,38 @@ public class MainApp extends Application {
     private Stage primaryStage;
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
 
 
-        EntityManager entityManager = EntityUtil.setUp().createEntityManager();
+        EntityManager entityManager = null;
+        try {
+            entityManager = EntityUtil.setUp().createEntityManager();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         DAOFactory daoFactory = DAOFactory.getInstance(entityManager);
         dataManager = daoFactory.getDAOFileItem();
         this.primaryStage = primaryStage;
 
         //dataManager = new DAOFileItemImpl(entityManager);
 
-        BrowserApp browserApp = new BrowserApp(dataManager, primaryStage);
+        BrowserApp browserApp = null;
+        try {
+            browserApp = new BrowserApp(dataManager, primaryStage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         ObservableList<FileItem> items = browserApp.getItems();
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../view/main.fxml"));
 
-        Parent root = loader.load();
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         MainAppController mainAppController = loader.getController();
         mainAppController.setMainApp(this);
         AnchorPane browserContainer = mainAppController.getBrowserContainer();
@@ -64,6 +83,14 @@ public class MainApp extends Application {
                 e.printStackTrace();
             }
         });
+
+        //Test
+        SyncService syncService = new SyncService(dataManager, Paths.get(AppSettings.getInstance().getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH)));
+        try {
+            syncService.createDirectoryStructureFromEFS();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public DAOFileItem getDataManager() {
