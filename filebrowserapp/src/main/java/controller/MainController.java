@@ -1,5 +1,7 @@
 package controller;
 
+import browserApp.BrowserApp;
+import events.ChangeEvent;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -47,6 +49,7 @@ public class MainController implements Initializable {
     private FileItem current;
     private FileFlowItem currentFlowItem;
     private Stage stage;
+    private BrowserApp app;
 
 
     private Image folderImg = new Image(getClass().getResourceAsStream("../images/folder.png"));
@@ -104,7 +107,8 @@ public class MainController implements Initializable {
                 new FileChooser.ExtensionFilter("Audio Files", "*.wav", "*.mp3", "*.aac"));
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
-            dataAdapter.addItem(selectedFile.getName(), false, selectedFile.length());
+            FileItem f = dataAdapter.addItem(selectedFile.getName(), false, selectedFile.length());
+            performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.CREATE, f));
         }
     }
 
@@ -113,6 +117,7 @@ public class MainController implements Initializable {
         if (current!=null){
             dataAdapter.deleteItem(current);
             items.remove(current);
+            performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.DELETE, current));
             current = null;
         }
     }
@@ -120,6 +125,7 @@ public class MainController implements Initializable {
     @FXML
     void createFolderHandler(){
         FileItem item = dataAdapter.addItem("New folder", true, 0);
+        performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.CREATE, item));
     }
 
     @FXML
@@ -205,7 +211,7 @@ public class MainController implements Initializable {
         selected.getChildren().clear();
         for (Object i : list) {
             if (!((FileItem) i).isDir()) continue;
-            selected.getChildren().add(new FileTreeItem<String>(((FileItem) i).getName(), (FileItem) i));
+            selected.getChildren().add(new FileTreeItem<>(((FileItem) i).getName(), (FileItem) i));
         }
     }
 
@@ -222,6 +228,7 @@ public class MainController implements Initializable {
 
 
         dataAdapter.update(current);
+        performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.RENAME, current));
 
         updateFlowView();
         tableView.refresh();
@@ -386,6 +393,14 @@ public class MainController implements Initializable {
 
     public void setStage(Stage stage){
         this.stage = stage;
+    }
+
+    public void setMainApp(BrowserApp app){
+        this.app = app;
+    }
+
+    public void performEvent(ChangeEvent e){
+        app.callListners(e);
     }
 
 

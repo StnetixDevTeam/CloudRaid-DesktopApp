@@ -2,6 +2,7 @@ package app;
 
 import browserApp.BrowserApp;
 import controller.MainAppController;
+import events.ChangeEvent;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -52,6 +53,7 @@ public class MainApp extends Application {
             e.printStackTrace();
         }
         ObservableList<FileItem> items = browserApp.getItems();
+        browserApp.addChangeListener(this::fileBrowserChangeListener);
 
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("../view/main.fxml"));
@@ -91,6 +93,11 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void fileBrowserChangeListener(ChangeEvent e){
+        ///TEST
+        System.out.println(e);
     }
 
     public DAOFileItem getDataManager() {

@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Anton on 18.06.2016.
+ * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class DAOFileItemImpl implements DAOFileItem {
 
@@ -74,7 +74,6 @@ public class DAOFileItemImpl implements DAOFileItem {
 
         currentContent.clear();
         currentContent.addAll(result);
-        //System.out.println("Current "+result);
         FXCollections.sort(currentContent);
 
         return  currentContent;
@@ -142,8 +141,6 @@ public class DAOFileItemImpl implements DAOFileItem {
         entityManager.getTransaction().begin();
         entityManager.merge(item);
 
-        System.out.println("update "+item);
-
         entityManager.getTransaction().commit();
 
         //entityManager.close();
@@ -151,7 +148,6 @@ public class DAOFileItemImpl implements DAOFileItem {
 
     @Override
     public void deleteItem(FileItem item) {
-        System.out.println("delete");
         item.setDeleted(true);
         update(item);
         String query = "from EFSItem where isDeleted = false and parent=" + item.getId();

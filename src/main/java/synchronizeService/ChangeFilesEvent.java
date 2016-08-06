@@ -12,19 +12,19 @@ public class ChangeFilesEvent {
         CREATE, DELETE, COPY, RENAME, MODIFY
     }
 
-    EVENT_TYPES types;
+    EVENT_TYPES type;
 
     private Path syncFolderItem;
     private FileItem EFSItem;
 
     public ChangeFilesEvent(EVENT_TYPES types, Path syncFolderItem, FileItem EFSItem) {
-        this.types = types;
+        this.type = types;
         this.syncFolderItem = syncFolderItem;
         this.EFSItem = EFSItem;
     }
 
-    public EVENT_TYPES getTypes() {
-        return types;
+    public EVENT_TYPES getType() {
+        return type;
     }
 
     public Path getSyncFolderItem() {
