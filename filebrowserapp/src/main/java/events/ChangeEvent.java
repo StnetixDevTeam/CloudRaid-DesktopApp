@@ -3,6 +3,9 @@ package events;
 import model.FileItem;
 
 /**
+ * Эти события генерируютя при изменении EFS
+ * подписаться на них можно используя метод BrowserApp.addChangeListener(ChangeEventListener l)
+ * созданы для отслеживания изменений в EFS и отображения их на диске в папке синхронизации
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class ChangeEvent {

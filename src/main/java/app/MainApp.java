@@ -60,6 +60,8 @@ public class MainApp extends Application {
             e.printStackTrace();
         }
         ObservableList<FileItem> items = browserApp.getItems();
+
+        //Подписка на события FileBrowser(изменения в EFS)
         browserApp.addChangeListener(this::fileBrowserChangeListener);
 
         FXMLLoader loader = new FXMLLoader();
@@ -94,6 +96,7 @@ public class MainApp extends Application {
         });
 
         //Test
+        //Создаём сервис синхронизации изменений на диске в папке синхронизации с EFS (пока не запущен)
         SyncService syncService = new SyncService(dataManager, Paths.get(AppSettings.getInstance().getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH)));
         try {
             syncService.createDirectoryStructureFromEFS();

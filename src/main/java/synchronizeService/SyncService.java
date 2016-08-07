@@ -24,6 +24,7 @@ public class SyncService {
     /**
      * метод синхронизует изменения в EFS с папкой синхронизации на диске
      * т.е. при создании папки в EFS в синхронизованой папке эта папка создаётся на диске
+     * FIXME пока функциональность дублируется с util.BrowserEventListeners
      * @param event событие изменений в EFS
      */
     public void syncEFStoFolder(ChangeFilesEvent event) {
