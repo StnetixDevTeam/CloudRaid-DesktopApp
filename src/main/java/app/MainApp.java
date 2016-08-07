@@ -12,6 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.DAOFactory;
 import model.DAOFileItem;
+import model.EFSItem;
 import model.FileItem;
 import synchronizeService.SyncService;
 import util.AppSettings;
@@ -23,17 +24,19 @@ import util.EntityUtil;
  */
 import javax.persistence.EntityManager;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class MainApp extends Application {
 
     private DAOFileItem dataManager;
     private Stage primaryStage;
+    private AppSettings settings;
 
     @Override
     public void start(Stage primaryStage) {
 
-
+        settings = AppSettings.getInstance();
         EntityManager entityManager = null;
         try {
             entityManager = EntityUtil.setUp().createEntityManager();
@@ -103,13 +106,21 @@ public class MainApp extends Application {
     public DAOFileItem getDataManager() {
         return dataManager;
     }
-
     public Stage getPrimaryStage() {
         return primaryStage;
     }
 
+    private void onDeleteEFSFile(EFSItem i){
+        FileItem parent = i.getParent();
+        if (parent.isSync()){
+            Path syncFolder = Paths.get(settings.getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH));
+
+        }
+    }
 
     public static void main(String[] args) {
         launch(args);
     }
+
+
 }

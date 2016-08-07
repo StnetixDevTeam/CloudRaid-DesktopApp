@@ -4,10 +4,7 @@ import model.DAOFileItem;
 import model.FileItem;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.List;
 
 /**
@@ -59,7 +56,8 @@ public class SyncService {
         List<FileItem> syncDirectories = daoFileItem.getSyncDirectories();
         for (FileItem i :
                 syncDirectories) {
-            String path = i.getPath().replace("root/", "") + "/" + i.getName();
+            //FIXME похоже в линуксе не так работает разделитель - /
+            String path = i.getPath().replace("root/", "") + FileSystems.getDefault().getSeparator() + i.getName();
             Path currentPath = syncFolder.resolve(path);
             if (!Files.exists(currentPath)) {
                 Files.createDirectories(currentPath);
