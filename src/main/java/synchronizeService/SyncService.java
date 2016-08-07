@@ -53,6 +53,7 @@ public class SyncService {
     /**
      *
      * Метод создаёт структуру из синхронизованных папок  EFS В папке синхронизации на диске
+     * TODO в линуксе не адекватно работает
      */
     public void createDirectoryStructureFromEFS() throws IOException {
         List<FileItem> syncDirectories = daoFileItem.getSyncDirectories();

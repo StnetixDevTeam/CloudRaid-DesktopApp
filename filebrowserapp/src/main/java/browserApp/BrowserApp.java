@@ -37,7 +37,7 @@ public class BrowserApp {
         dataAdapter.setContent(items);
 
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("../View/fileBrowser.fxml"));
+        loader.setLocation(getClass().getResource("../view/fileBrowser.fxml"));
         container = loader.load();
         controller = loader.getController();
         controller.setMainApp(this);
