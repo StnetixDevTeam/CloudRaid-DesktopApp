@@ -105,6 +105,11 @@ public class MainApp extends Application {
         }
     }
 
+    /**
+     * Метод принимает события из FileBrowser
+     * TODO обработку событий перенести в SyncService а тут отправлять события в очередь
+     * @param e событие FileBrowser
+     */
     public void fileBrowserChangeListener(ChangeEvent e){
         switch (e.getType()){
             case DELETE:

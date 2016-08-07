@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * Сервис синхронизации EFS и syncFolder на диске
+ * Идея такая: все события из EFS и SyncFolder поступают в очередь и обрабатываются этим сервисом
  *
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
