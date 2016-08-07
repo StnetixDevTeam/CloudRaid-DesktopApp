@@ -30,9 +30,7 @@ import java.awt.*;
 import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 
 /**
@@ -221,6 +219,8 @@ public class MainController implements Initializable {
         dialog.setHeaderText(null);
         dialog.setContentText("Please enter new name:");
 
+        String oldName = current.getName();
+
         Optional<String> result = dialog.showAndWait();
         if (result.isPresent()){
             current.setName(result.get());
@@ -228,7 +228,7 @@ public class MainController implements Initializable {
 
 
         dataAdapter.update(current);
-        performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.RENAME, current));
+        performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.RENAME, current, oldName));
 
         updateFlowView();
         tableView.refresh();

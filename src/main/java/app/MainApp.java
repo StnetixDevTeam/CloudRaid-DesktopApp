@@ -12,20 +12,24 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.DAOFactory;
 import model.DAOFileItem;
-import model.EFSItem;
 import model.FileItem;
 import synchronizeService.SyncService;
 import util.AppSettings;
 import util.EntityUtil;
 
+
+import javax.persistence.EntityManager;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static util.BrowserEventListners.*;
+
 /**
  *Start point
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
-import javax.persistence.EntityManager;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class MainApp extends Application {
 
@@ -99,7 +103,16 @@ public class MainApp extends Application {
     }
 
     public void fileBrowserChangeListener(ChangeEvent e){
-        ///TEST
+        switch (e.getType()){
+            case DELETE:
+                onDeleteEFSFile(e.getFile());
+                break;
+            case CREATE:
+                onCreateEFSFile(e.getFile());
+                break;
+            case RENAME:
+                onRenameEFSFIle(e.getFile(), e.getOldName());
+        }
         System.out.println(e);
     }
 
@@ -110,13 +123,6 @@ public class MainApp extends Application {
         return primaryStage;
     }
 
-    private void onDeleteEFSFile(EFSItem i){
-        FileItem parent = i.getParent();
-        if (parent.isSync()){
-            Path syncFolder = Paths.get(settings.getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH));
-
-        }
-    }
 
     public static void main(String[] args) {
         launch(args);

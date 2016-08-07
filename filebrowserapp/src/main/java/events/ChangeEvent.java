@@ -12,11 +12,19 @@ public class ChangeEvent {
 
     private EVENT_TYPES type;
     private FileItem file;
+    private String oldName;
 
     public ChangeEvent(EVENT_TYPES type, FileItem file) {
         this.type = type;
         this.file = file;
+        this.oldName = null;
     }
+    public ChangeEvent(EVENT_TYPES type, FileItem file, String oldName) {
+        this.type = type;
+        this.file = file;
+        this.oldName = oldName;
+    }
+
 
     public EVENT_TYPES getType() {
         return type;
@@ -24,6 +32,10 @@ public class ChangeEvent {
 
     public FileItem getFile() {
         return file;
+    }
+
+    public String getOldName() {
+        return oldName;
     }
 
     @Override
