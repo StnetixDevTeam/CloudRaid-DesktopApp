@@ -55,13 +55,14 @@ public class SyncService implements Runnable{
      * @param event событие изменений в папке на диске
      */
     public void syncFolderToEFS(ChangeFilesEvent event){
+        System.out.println("From FileSystem "+event);
         switch (event.getType()){
             case DELETE:
                 break;
             case CREATE:
                 break;
             case RENAME:
-                System.out.println("From FileSystem "+event);
+                break;
         }
     }
 
