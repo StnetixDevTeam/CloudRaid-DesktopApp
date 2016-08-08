@@ -11,7 +11,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.DAOFactory;
 import model.DAOFileItem;
+import newWatchingService.ChangeSyncFolderListener;
 import newWatchingService.DirectoryWatchingService;
+import newWatchingService.EventsConsumer;
 import synchronizeService.ChangeFilesEvent;
 import synchronizeService.SyncService;
 import util.AppSettings;
@@ -20,6 +22,7 @@ import util.EntityUtil;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 /**
@@ -32,7 +35,8 @@ public class MainApp extends Application {
     private DAOFileItem dataManager;
     private Stage primaryStage;
     private AppSettings settings;
-    SyncService syncService;
+    private SyncService syncService;
+    private DirectoryWatchingService directoryWatchingService;
 
     @Override
     public void start(Stage primaryStage) {
@@ -87,14 +91,23 @@ public class MainApp extends Application {
         primaryStage.setOnCloseRequest(event -> {
             try {
                 dataManager.close();
-                SyncService.stop = true;
+                syncService.stop();
+                directoryWatchingService.stop();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
 
         //сервис отслеживания изменений на диске в syncFolder
-        DirectoryWatchingService directoryWatchingService = new DirectoryWatchingService();
+        directoryWatchingService = new DirectoryWatchingService();
+        directoryWatchingService.addConsumerEventListner(new ChangeSyncFolderListener() {
+            //TODO организовать доставку событий из syncFolder в очередь SyncService
+            @Override
+            public void onChange(EventsConsumer.EVENT_TYPES type, Path source, Path target) {
+                System.out.println("From File system: "+type);
+            }
+        });
+        directoryWatchingService.start();
 
         //Test
         //Создаём сервис синхронизации изменений на диске в папке синхронизации с EFS (пока не запущен)

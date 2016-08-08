@@ -20,9 +20,12 @@ import java.util.concurrent.ArrayBlockingQueue;
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class DirectoryWatchingService {
+    public static volatile boolean stop = false;
+
     Queue<ChangeEvent> queue;
     EventProducer producer;
     EventsConsumer consumer;
+
 
     public DirectoryWatchingService(){
         queue = new ArrayBlockingQueue<>(100);
@@ -38,6 +41,11 @@ public class DirectoryWatchingService {
     public void start(){
         new Thread(producer).start();
         new Thread(consumer).start();
+    }
+
+    public void stop(){
+        stop = true;
+        producer.stop();
     }
 
     public void addConsumerEventListner(ChangeSyncFolderListener listener){

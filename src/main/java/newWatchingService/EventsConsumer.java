@@ -35,7 +35,7 @@ public class EventsConsumer implements Runnable {
 
     @Override
     public void run() {
-        while (true){
+        while (!DirectoryWatchingService.stop){
             try {
                 Thread.sleep(DELAY);
                 if (queue.size()>1){

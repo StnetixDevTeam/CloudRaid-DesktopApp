@@ -110,4 +110,7 @@ public class SyncService implements Runnable{
     public void addEvent(ChangeFilesEvent e){
         queue.add(e);
     }
+    public void stop(){
+        stop = true;
+    }
 }

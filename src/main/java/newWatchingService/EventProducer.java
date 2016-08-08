@@ -138,4 +138,11 @@ public class EventProducer implements Runnable{
             e.printStackTrace();
         }
     }
+    public void stop(){
+        try {
+            watcher.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
