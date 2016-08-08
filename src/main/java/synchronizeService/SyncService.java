@@ -35,13 +35,7 @@ public class SyncService implements Runnable{
      * @param event событие изменений в EFS
      */
     public void syncEFStoFolder(ChangeFilesEvent event) {
-        if (event.getEFSItem().isDir()) {
-            Path newPath = syncFolder.resolve(event.getEFSItem().getPath());
-            System.out.println(newPath);
-            if (!Files.exists(newPath, LinkOption.NOFOLLOW_LINKS)) {
-                System.out.println("create");
-            }
-        }
+
         switch (event.getType()){
             case DELETE:
                 onDeleteEFSFile(event.getEFSItem());
@@ -51,6 +45,7 @@ public class SyncService implements Runnable{
                 break;
             case RENAME:
                 onRenameEFSFIle(event.getEFSItem(), event.getOldName());
+                break;
         }
     }
 
@@ -60,8 +55,13 @@ public class SyncService implements Runnable{
      * @param event событие изменений в папке на диске
      */
     public void syncFolderToEFS(ChangeFilesEvent event){
-        if (Files.isDirectory(event.getSyncFolderItem())){
-
+        switch (event.getType()){
+            case DELETE:
+                break;
+            case CREATE:
+                break;
+            case RENAME:
+                System.out.println("From FileSystem "+event);
         }
     }
 

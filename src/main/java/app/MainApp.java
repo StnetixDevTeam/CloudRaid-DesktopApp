@@ -104,7 +104,20 @@ public class MainApp extends Application {
             //TODO организовать доставку событий из syncFolder в очередь SyncService
             @Override
             public void onChange(EventsConsumer.EVENT_TYPES type, Path source, Path target) {
-                System.out.println("From File system: "+type);
+                //System.out.println("From File system: "+type);
+                switch (type){
+                    case DELETE:
+                        syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.DELETE, source, null));
+                        //onDeleteEFSFile(e.getFile());
+                        break;
+                    case CREATE:
+                        syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.CREATE, source, null));
+                        //onCreateEFSFile(e.getFile());
+                        break;
+                    case RENAME:
+                        syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.RENAME, source, null, target.getFileName().toString()));
+                        //onRenameEFSFIle(e.getFile(), e.getOldName());
+                }
             }
         });
         directoryWatchingService.start();

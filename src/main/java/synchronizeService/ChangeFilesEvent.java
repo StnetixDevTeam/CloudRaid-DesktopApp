@@ -53,6 +53,7 @@ public class ChangeFilesEvent {
                 "type=" + type +
                 ", syncFolderItem=" + syncFolderItem +
                 ", EFSItem=" + EFSItem +
+                ", oldName='" + oldName + '\'' +
                 '}';
     }
 }

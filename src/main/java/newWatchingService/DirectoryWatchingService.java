@@ -39,6 +39,7 @@ public class DirectoryWatchingService {
     }
 
     public void start(){
+        System.out.println("Directory watching service is running!");
         new Thread(producer).start();
         new Thread(consumer).start();
     }
