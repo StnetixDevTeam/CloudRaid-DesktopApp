@@ -1,5 +1,5 @@
 import newWatchingService.EventsConsumer;
-import newWatchingService.Service;
+import newWatchingService.DirectoryWatchingService;
 
 import java.nio.file.Path;
 
@@ -8,9 +8,9 @@ import java.nio.file.Path;
  */
 public class TestNewDirectoryWatcher {
     public static void main(String[] args) {
-        Service service = new Service();
-        service.addConsumerEventListner(TestNewDirectoryWatcher::listner);
-        service.start();
+        DirectoryWatchingService directoryWatchingService = new DirectoryWatchingService();
+        directoryWatchingService.addConsumerEventListner(TestNewDirectoryWatcher::listner);
+        directoryWatchingService.start();
 
     }
 

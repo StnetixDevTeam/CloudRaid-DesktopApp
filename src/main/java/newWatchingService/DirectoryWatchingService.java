@@ -19,12 +19,12 @@ import java.util.concurrent.ArrayBlockingQueue;
  *
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
-public class Service {
+public class DirectoryWatchingService {
     Queue<ChangeEvent> queue;
     EventProducer producer;
     EventsConsumer consumer;
 
-    public Service(){
+    public DirectoryWatchingService(){
         queue = new ArrayBlockingQueue<>(100);
         try {
             producer = new EventProducer(queue);

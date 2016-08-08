@@ -4,7 +4,6 @@ import browserApp.BrowserApp;
 import controller.MainAppController;
 import events.ChangeEvent;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,7 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.DAOFactory;
 import model.DAOFileItem;
-import model.FileItem;
+import newWatchingService.DirectoryWatchingService;
 import synchronizeService.SyncService;
 import util.AppSettings;
 import util.EntityUtil;
@@ -20,8 +19,6 @@ import util.EntityUtil;
 
 import javax.persistence.EntityManager;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static util.BrowserEventListners.*;
@@ -59,7 +56,7 @@ public class MainApp extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ObservableList<FileItem> items = browserApp.getItems();
+        //ObservableList<FileItem> items = browserApp.getItems();
 
         //Подписка на события FileBrowser(изменения в EFS)
         browserApp.addChangeListener(this::fileBrowserChangeListener);
@@ -94,6 +91,9 @@ public class MainApp extends Application {
                 e.printStackTrace();
             }
         });
+
+        //сервис отслеживания изменений на диске в syncFolder
+        DirectoryWatchingService directoryWatchingService = new DirectoryWatchingService();
 
         //Test
         //Создаём сервис синхронизации изменений на диске в папке синхронизации с EFS (пока не запущен)
