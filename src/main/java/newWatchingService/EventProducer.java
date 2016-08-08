@@ -1,7 +1,6 @@
 package newWatchingService;
 
 import util.AppSettings;
-import watchingService.ChangeSyncFolderListener;
 
 import java.io.IOException;
 import java.nio.file.*;
