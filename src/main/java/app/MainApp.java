@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import model.DAOFactory;
 import model.DAOFileItem;
 import newWatchingService.DirectoryWatchingService;
+import synchronizeService.ChangeFilesEvent;
 import synchronizeService.SyncService;
 import util.AppSettings;
 import util.EntityUtil;
@@ -20,8 +21,6 @@ import util.EntityUtil;
 import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.nio.file.Paths;
-
-import static util.BrowserEventListners.*;
 
 /**
  *Start point
@@ -33,6 +32,7 @@ public class MainApp extends Application {
     private DAOFileItem dataManager;
     private Stage primaryStage;
     private AppSettings settings;
+    SyncService syncService;
 
     @Override
     public void start(Stage primaryStage) {
@@ -87,6 +87,7 @@ public class MainApp extends Application {
         primaryStage.setOnCloseRequest(event -> {
             try {
                 dataManager.close();
+                SyncService.stop = true;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -97,31 +98,34 @@ public class MainApp extends Application {
 
         //Test
         //Создаём сервис синхронизации изменений на диске в папке синхронизации с EFS (пока не запущен)
-        SyncService syncService = new SyncService(dataManager, Paths.get(AppSettings.getInstance().getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH)));
+        syncService = new SyncService(dataManager, Paths.get(AppSettings.getInstance().getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH)));
         try {
             syncService.createDirectoryStructureFromEFS();
+            new Thread(syncService).start();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Метод принимает события из FileBrowser
-     * TODO обработку событий перенести в SyncService а тут отправлять события в очередь
+     * Метод принимает события из FileBrowser и отправляет их в очередь на SyncService
      * @param e событие FileBrowser
      */
     public void fileBrowserChangeListener(ChangeEvent e){
         switch (e.getType()){
             case DELETE:
-                onDeleteEFSFile(e.getFile());
+                syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.DELETE, null, e.getFile()));
+                //onDeleteEFSFile(e.getFile());
                 break;
             case CREATE:
-                onCreateEFSFile(e.getFile());
+                syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.CREATE, null, e.getFile()));
+                //onCreateEFSFile(e.getFile());
                 break;
             case RENAME:
-                onRenameEFSFIle(e.getFile(), e.getOldName());
+                syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.RENAME, null, e.getFile(), e.getOldName()));
+                //onRenameEFSFIle(e.getFile(), e.getOldName());
         }
-        System.out.println(e);
+        //System.out.println(e);
     }
 
     public DAOFileItem getDataManager() {

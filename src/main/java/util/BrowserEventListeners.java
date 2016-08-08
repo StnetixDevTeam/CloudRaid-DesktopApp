@@ -1,6 +1,8 @@
 package util;
 
 import model.FileItem;
+import synchronizeService.ChangeFilesEvent;
+import synchronizeService.SyncService;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -11,16 +13,18 @@ import java.nio.file.Paths;
 /**
  * Created by Anton on 07.08.2016.
  */
-public class BrowserEventListners {
+public class BrowserEventListeners {
     static AppSettings settings = AppSettings.getInstance();
 
     public static Path setCurrentPathInSyncFolder(FileItem i){
+
         Path syncFolder = Paths.get(settings.getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH));
         String path = i.getPath().replace("root/", "") + FileSystems.getDefault().getSeparator() + i.getName();
         return syncFolder.resolve(path);
     }
 
     public static void onRenameEFSFIle(FileItem i, String oldName){
+
         FileItem parent = i.getParent();
         if (parent.isSync()){
             Path newPath = setCurrentPathInSyncFolder(i);
@@ -37,6 +41,7 @@ public class BrowserEventListners {
     }
 
     public static void onCreateEFSFile(FileItem i){
+
         FileItem parent = i.getParent();
         if (parent.isSync()){
             Path currentPath = setCurrentPathInSyncFolder(i);

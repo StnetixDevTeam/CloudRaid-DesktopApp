@@ -6,6 +6,10 @@ import model.FileItem;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+
+import static util.BrowserEventListeners.*;
 
 /**
  * Сервис синхронизации EFS и syncFolder на диске
@@ -13,7 +17,10 @@ import java.util.List;
  *
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
-public class SyncService {
+public class SyncService implements Runnable{
+    public static Queue<ChangeFilesEvent> queue = new ArrayBlockingQueue<>(100);
+    public static volatile boolean stop = false;
+
     private Path syncFolder;
     private DAOFileItem daoFileItem;
 
@@ -25,7 +32,6 @@ public class SyncService {
     /**
      * метод синхронизует изменения в EFS с папкой синхронизации на диске
      * т.е. при создании папки в EFS в синхронизованой папке эта папка создаётся на диске
-     * FIXME пока функциональность дублируется с util.BrowserEventListeners
      * @param event событие изменений в EFS
      */
     public void syncEFStoFolder(ChangeFilesEvent event) {
@@ -35,6 +41,16 @@ public class SyncService {
             if (!Files.exists(newPath, LinkOption.NOFOLLOW_LINKS)) {
                 System.out.println("create");
             }
+        }
+        switch (event.getType()){
+            case DELETE:
+                onDeleteEFSFile(event.getEFSItem());
+                break;
+            case CREATE:
+                onCreateEFSFile(event.getEFSItem());
+                break;
+            case RENAME:
+                onRenameEFSFIle(event.getEFSItem(), event.getOldName());
         }
     }
 
@@ -68,5 +84,30 @@ public class SyncService {
 
 
         }
+    }
+
+    @Override
+    public void run() {
+        System.out.println("Sync service is running!");
+        while (!stop){
+            try {
+                Thread.sleep(100);
+                ChangeFilesEvent e  = queue.poll();
+                if (e!=null){
+                    System.out.println(e);
+                    if (e.getEFSItem()==null){
+                        syncFolderToEFS(e);
+                    } else if (e.getSyncFolderItem()==null){
+                        syncEFStoFolder(e);
+                    }
+                }
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public void addEvent(ChangeFilesEvent e){
+        queue.add(e);
     }
 }
