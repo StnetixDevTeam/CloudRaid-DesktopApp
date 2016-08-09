@@ -72,13 +72,14 @@ public class EventProducer implements Runnable{
 
     @Override
     public void run() {
-        for (; ; ) {
+        while (!DirectoryWatchingService.stop) {
 
             // wait for key to be signalled
             WatchKey key;
             try {
                 key = watcher.take();
             } catch (InterruptedException x) {
+                x.printStackTrace();
                 return;
             }
 
@@ -87,6 +88,7 @@ public class EventProducer implements Runnable{
                 System.err.println("WatchKey not recognized!!");
                 continue;
             }
+
 
             for (WatchEvent<?> event : key.pollEvents()) {
                 WatchEvent.Kind kind = event.kind();
@@ -112,6 +114,7 @@ public class EventProducer implements Runnable{
                             registerAll(child);
                         }
                     } catch (IOException x) {
+                        x.printStackTrace();
                     }
                 }
             }
@@ -136,12 +139,14 @@ public class EventProducer implements Runnable{
             watcher.close();
         } catch (IOException e) {
             e.printStackTrace();
+
         }
     }
     public void stop(){
         try {
             watcher.close();
         } catch (IOException e) {
+
             e.printStackTrace();
         }
     }
