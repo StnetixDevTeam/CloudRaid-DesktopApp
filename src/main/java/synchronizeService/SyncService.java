@@ -35,7 +35,7 @@ public class SyncService implements Runnable{
      * @param event событие изменений в EFS
      */
     public void syncEFStoFolder(ChangeFilesEvent event) {
-
+        System.out.println("From EFS "+event);
         switch (event.getType()){
             case DELETE:
                 onDeleteEFSFile(event.getEFSItem());
@@ -80,7 +80,7 @@ public class SyncService implements Runnable{
             Path currentPath = syncFolder.resolve(path);
             if (!Files.exists(currentPath)) {
                 Files.createDirectories(currentPath);
-                System.out.println(currentPath);
+                //System.out.println(currentPath);
             }
 
 
@@ -95,7 +95,7 @@ public class SyncService implements Runnable{
                 Thread.sleep(100);
                 ChangeFilesEvent e  = queue.poll();
                 if (e!=null){
-                    System.out.println(e);
+                    //System.out.println("Event from sync manager "+e);
                     if (e.getEFSItem()==null){
                         syncFolderToEFS(e);
                     } else if (e.getSyncFolderItem()==null){

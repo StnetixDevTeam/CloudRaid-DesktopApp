@@ -9,7 +9,7 @@ import java.nio.file.Path;
 public class TestNewDirectoryWatcher {
     public static void main(String[] args) {
         DirectoryWatchingService directoryWatchingService = new DirectoryWatchingService();
-        directoryWatchingService.addConsumerEventListner(TestNewDirectoryWatcher::listner);
+        directoryWatchingService.addConsumerEventListener(TestNewDirectoryWatcher::listner);
         directoryWatchingService.start();
 
     }

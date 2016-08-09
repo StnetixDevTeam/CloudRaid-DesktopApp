@@ -103,7 +103,7 @@ public class EventProducer implements Runnable{
                 Path child = dir.resolve(name);
 
                 // print out event
-                System.out.format("%s: %s\n", event.kind().name(), child);
+                System.out.format("NATIVE EVENT: %s: %s\n", event.kind().name(), child);
                 queue.add(new ChangeEvent(event.kind(), child));
 
                 // if directory is created, and watching recursively, then

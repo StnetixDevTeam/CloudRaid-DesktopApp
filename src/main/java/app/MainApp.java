@@ -100,29 +100,24 @@ public class MainApp extends Application {
 
         //сервис отслеживания изменений на диске в syncFolder
         directoryWatchingService = new DirectoryWatchingService();
-        directoryWatchingService.addConsumerEventListner(new ChangeSyncFolderListener() {
-            //TODO организовать доставку событий из syncFolder в очередь SyncService
-            @Override
-            public void onChange(EventsConsumer.EVENT_TYPES type, Path source, Path target) {
-                //System.out.println("From File system: "+type);
-                switch (type){
-                    case DELETE:
-                        syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.DELETE, source, null));
-                        //onDeleteEFSFile(e.getFile());
-                        break;
-                    case CREATE:
-                        syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.CREATE, source, null));
-                        //onCreateEFSFile(e.getFile());
-                        break;
-                    case RENAME:
-                        syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.RENAME, source, null, target.getFileName().toString()));
-                        //onRenameEFSFIle(e.getFile(), e.getOldName());
-                }
+        directoryWatchingService.addConsumerEventListener((type, source, target) -> {
+            //System.out.println("From File system: "+type);
+            switch (type){
+                case DELETE:
+                    syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.DELETE, source, null));
+                    //onDeleteEFSFile(e.getFile());
+                    break;
+                case CREATE:
+                    syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.CREATE, source, null));
+                    //onCreateEFSFile(e.getFile());
+                    break;
+                case RENAME:
+                    syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.RENAME, source, null, target.getFileName().toString()));
+                    //onRenameEFSFIle(e.getFile(), e.getOldName());
             }
         });
         directoryWatchingService.start();
 
-        //Test
         //Создаём сервис синхронизации изменений на диске в папке синхронизации с EFS (пока не запущен)
         syncService = new SyncService(dataManager, Paths.get(AppSettings.getInstance().getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH)));
         try {
