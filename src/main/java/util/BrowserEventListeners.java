@@ -5,10 +5,11 @@ import synchronizeService.ChangeFilesEvent;
 import synchronizeService.SyncService;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Anton on 07.08.2016.
@@ -63,12 +64,22 @@ public class BrowserEventListeners {
         if (parent.isSync()){
             Path currentPath = setCurrentPathInSyncFolder(i);
             if (Files.exists(currentPath)){
-                try {
-                    Files.delete(currentPath);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                deletePaths(currentPath);
             } else System.out.println("Не могу удалить файл т.к он не существует. Path: " + currentPath);
+        }
+    }
+    private static void deletePaths(Path currentPath){
+       try {
+            try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(currentPath)) {
+                for (Path path : directoryStream) {
+                    if (Files.isDirectory(path)) deletePaths(path);
+                    else Files.delete(path);
+                }
+            } catch (IOException ex) {}
+
+            Files.delete(currentPath);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

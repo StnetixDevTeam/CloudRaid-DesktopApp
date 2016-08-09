@@ -130,6 +130,7 @@ public class DAOFileItemImpl implements DAOFileItem {
 
         //entityManager.close();
         currentContent.add(item);
+        if (item.getParent().isSync()) item.setSync(true);
 
 
         return item;
