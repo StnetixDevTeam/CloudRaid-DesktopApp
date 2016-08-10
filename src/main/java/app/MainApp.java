@@ -2,7 +2,7 @@ package app;
 
 import browserApp.BrowserApp;
 import controller.MainAppController;
-import events.ChangeEvent;
+import events.FileBrowserEvent;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,6 +24,7 @@ import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 
 /**
  *Start point
@@ -132,7 +133,7 @@ public class MainApp extends Application {
      * Метод принимает события из FileBrowser и отправляет их в очередь на SyncService
      * @param e событие FileBrowser
      */
-    public void fileBrowserChangeListener(ChangeEvent e){
+    public void fileBrowserChangeListener(FileBrowserEvent e){
         switch (e.getType()){
             case DELETE:
                 syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.DELETE, null, e.getFile()));

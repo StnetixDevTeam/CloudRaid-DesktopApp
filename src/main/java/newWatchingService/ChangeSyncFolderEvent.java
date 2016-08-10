@@ -6,14 +6,14 @@ import java.nio.file.WatchEvent;
 /**
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
-public class ChangeEvent {
+public class ChangeSyncFolderEvent {
 
 
     private WatchEvent.Kind<?> type;
     private Path source;
 
 
-    public ChangeEvent(WatchEvent.Kind<?> type, Path source){
+    public ChangeSyncFolderEvent(WatchEvent.Kind<?> type, Path source){
         this.type = type;
         this.source = source;
     }

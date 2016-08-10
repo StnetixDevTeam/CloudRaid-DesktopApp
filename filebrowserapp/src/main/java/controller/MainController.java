@@ -1,7 +1,7 @@
 package controller;
 
 import browserApp.BrowserApp;
-import events.ChangeEvent;
+import events.FileBrowserEvent;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -106,7 +106,7 @@ public class MainController implements Initializable {
         File selectedFile = fileChooser.showOpenDialog(stage);
         if (selectedFile != null) {
             FileItem f = dataAdapter.addItem(selectedFile.getName(), false, selectedFile.length());
-            performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.CREATE, f));
+            performEvent(new FileBrowserEvent(FileBrowserEvent.EVENT_TYPES.CREATE, f));
         }
     }
 
@@ -115,7 +115,7 @@ public class MainController implements Initializable {
         if (current!=null){
             dataAdapter.deleteItem(current);
             items.remove(current);
-            performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.DELETE, current));
+            performEvent(new FileBrowserEvent(FileBrowserEvent.EVENT_TYPES.DELETE, current));
             current = null;
         }
     }
@@ -123,7 +123,7 @@ public class MainController implements Initializable {
     @FXML
     void createFolderHandler(){
         FileItem item = dataAdapter.addItem("New folder", true, 0);
-        performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.CREATE, item));
+        performEvent(new FileBrowserEvent(FileBrowserEvent.EVENT_TYPES.CREATE, item));
     }
 
     @FXML
@@ -228,7 +228,7 @@ public class MainController implements Initializable {
 
 
         dataAdapter.update(current);
-        performEvent(new ChangeEvent(ChangeEvent.EVENT_TYPES.RENAME, current, oldName));
+        performEvent(new FileBrowserEvent(FileBrowserEvent.EVENT_TYPES.RENAME, current, oldName));
 
         updateFlowView();
         tableView.refresh();
@@ -399,7 +399,7 @@ public class MainController implements Initializable {
         this.app = app;
     }
 
-    public void performEvent(ChangeEvent e){
+    public void performEvent(FileBrowserEvent e){
         app.callListners(e);
     }
 

@@ -14,14 +14,14 @@ import static java.nio.file.StandardWatchEventKinds.*;
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class EventProducer implements Runnable{
-    private Queue<ChangeEvent> queue;
+    private Queue<ChangeSyncFolderEvent> queue;
     private Path watchingFile;
     private List<ChangeSyncFolderListener> listeners;
     private final WatchService watcher;
     private final Map<WatchKey, Path> keys;
     private boolean trace = false;
 
-    public EventProducer(Queue<ChangeEvent> queue) throws IOException {
+    public EventProducer(Queue<ChangeSyncFolderEvent> queue) throws IOException {
         this.queue = queue;
         listeners = new ArrayList<>();
         this.watcher = FileSystems.getDefault().newWatchService();
@@ -104,7 +104,7 @@ public class EventProducer implements Runnable{
 
                 // print out event
                 System.out.format("NATIVE EVENT: %s: %s\n", event.kind().name(), child);
-                queue.add(new ChangeEvent(event.kind(), child));
+                queue.add(new ChangeSyncFolderEvent(event.kind(), child));
 
                 // if directory is created, and watching recursively, then
                 // register it and its sub-directories

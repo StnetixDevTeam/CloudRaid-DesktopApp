@@ -20,10 +20,10 @@ public class EventsConsumer implements Runnable {
 
     private final int DELAY = 200;
 
-    private Queue<ChangeEvent> queue;
+    private Queue<ChangeSyncFolderEvent> queue;
     private List<ChangeSyncFolderListener> listeners;
 
-    public EventsConsumer(Queue<ChangeEvent> queue){
+    public EventsConsumer(Queue<ChangeSyncFolderEvent> queue){
         listeners = new ArrayList<>();
         this.queue = queue;
     }
@@ -39,8 +39,8 @@ public class EventsConsumer implements Runnable {
             try {
                 Thread.sleep(DELAY);
                 if (queue.size()>1){
-                    ChangeEvent event1 = queue.poll();
-                    ChangeEvent event2 = queue.poll();
+                    ChangeSyncFolderEvent event1 = queue.poll();
+                    ChangeSyncFolderEvent event2 = queue.poll();
                     if (event1.getType().equals(ENTRY_DELETE)&&event2.getType().equals(ENTRY_CREATE)){
                         callListeners(EVENT_TYPES.RENAME, event1.getSource(), event2.getSource());
                     } else {
@@ -51,7 +51,7 @@ public class EventsConsumer implements Runnable {
                 } else {
                     int size = queue.size();
                     for (int i = 0; i < size; i++) {
-                        ChangeEvent event = queue.poll();
+                        ChangeSyncFolderEvent event = queue.poll();
                         callListeners(prepareEvent(event.getType()), event.getSource(), null);
                     }
                 }

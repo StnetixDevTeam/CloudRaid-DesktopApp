@@ -21,7 +21,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class DirectoryWatchingService {
     public static volatile boolean stop = false;
 
-    Queue<ChangeEvent> queue;
+    Queue<ChangeSyncFolderEvent> queue;
     EventProducer producer;
     EventsConsumer consumer;
 

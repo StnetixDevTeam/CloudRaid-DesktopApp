@@ -1,8 +1,9 @@
 package browserApp;
 
 import controller.MainController;
-import events.ChangeEvent;
-import events.ChangeEventListener;
+
+import events.FileBrowserEvent;
+import events.FileBrowserEventListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -25,7 +26,7 @@ public class BrowserApp {
     public VBox pane;
     private ObservableList<FileItem> items;
     private Stage stage;
-    private List<ChangeEventListener> listeners;
+    private List<FileBrowserEventListener> listeners;
 
     public BrowserApp(DAOFileItem dataAdapter, Stage stage) throws IOException {
 
@@ -51,12 +52,12 @@ public class BrowserApp {
         return items;
     }
 
-    public void addChangeListener(ChangeEventListener listener){
+    public void addChangeListener(FileBrowserEventListener listener){
         listeners.add(listener);
     }
 
-    public void callListners(ChangeEvent event){
-        for (ChangeEventListener l :
+    public void callListners(FileBrowserEvent event){
+        for (FileBrowserEventListener l :
                 listeners) {
             l.onChange(event);
         }

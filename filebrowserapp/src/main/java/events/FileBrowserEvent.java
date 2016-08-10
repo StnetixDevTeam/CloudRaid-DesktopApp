@@ -8,7 +8,7 @@ import model.FileItem;
  * созданы для отслеживания изменений в EFS и отображения их на диске в папке синхронизации
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
-public class ChangeEvent {
+public class FileBrowserEvent {
     public enum EVENT_TYPES {
         CREATE, MODIFY, DELETE, RENAME
     }
@@ -17,12 +17,12 @@ public class ChangeEvent {
     private FileItem file;
     private String oldName;
 
-    public ChangeEvent(EVENT_TYPES type, FileItem file) {
+    public FileBrowserEvent(EVENT_TYPES type, FileItem file) {
         this.type = type;
         this.file = file;
         this.oldName = null;
     }
-    public ChangeEvent(EVENT_TYPES type, FileItem file, String oldName) {
+    public FileBrowserEvent(EVENT_TYPES type, FileItem file, String oldName) {
         this.type = type;
         this.file = file;
         this.oldName = oldName;
