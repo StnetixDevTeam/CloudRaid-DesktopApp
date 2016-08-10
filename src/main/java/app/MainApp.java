@@ -11,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import model.DAOFactory;
 import model.DAOFileItem;
-import newWatchingService.ChangeSyncFolderListener;
 import newWatchingService.DirectoryWatchingService;
 import newWatchingService.EventsConsumer;
 import synchronizeService.ChangeFilesEvent;
@@ -101,22 +100,9 @@ public class MainApp extends Application {
 
         //сервис отслеживания изменений на диске в syncFolder
         directoryWatchingService = new DirectoryWatchingService();
-        directoryWatchingService.addConsumerEventListener((type, source, target) -> {
-            //System.out.println("From File system: "+type);
-            switch (type){
-                case DELETE:
-                    syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.DELETE, source, null));
-                    //onDeleteEFSFile(e.getFile());
-                    break;
-                case CREATE:
-                    syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.CREATE, source, null));
-                    //onCreateEFSFile(e.getFile());
-                    break;
-                case RENAME:
-                    syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.RENAME, source, null, target.getFileName().toString()));
-                    //onRenameEFSFIle(e.getFile(), e.getOldName());
-            }
-        });
+
+
+        directoryWatchingService.addConsumerEventListener(this::syncFolderChangeListener);
         directoryWatchingService.start();
 
         //Создаём сервис синхронизации изменений на диске в папке синхронизации с EFS (пока не запущен)
@@ -129,11 +115,35 @@ public class MainApp extends Application {
         }
     }
 
+
+    /**
+     * метод принимает события из WatchingService и добавляет их в очередь на SyncService
+     * @param type EventsConsumer.EVENT_TYPES
+     * @param source Path
+     * @param target Path
+     */
+    private void syncFolderChangeListener(EventsConsumer.EVENT_TYPES type, Path source, Path target){
+        //System.out.println("From File system: "+type);
+        switch (type){
+            case DELETE:
+                syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.DELETE, source, null));
+                //onDeleteEFSFile(e.getFile());
+                break;
+            case CREATE:
+                syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.CREATE, source, null));
+                //onCreateEFSFile(e.getFile());
+                break;
+            case RENAME:
+                syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.RENAME, source, null, target.getFileName().toString()));
+                //onRenameEFSFIle(e.getFile(), e.getOldName());
+        }
+    }
+
     /**
      * Метод принимает события из FileBrowser и отправляет их в очередь на SyncService
      * @param e событие FileBrowser
      */
-    public void fileBrowserChangeListener(FileBrowserEvent e){
+    private void fileBrowserChangeListener(FileBrowserEvent e){
         switch (e.getType()){
             case DELETE:
                 syncService.addEvent(new ChangeFilesEvent(ChangeFilesEvent.EVENT_TYPES.DELETE, null, e.getFile()));
