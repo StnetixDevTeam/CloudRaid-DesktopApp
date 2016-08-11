@@ -2,6 +2,8 @@ package synchronizeService;
 
 import model.DAOFileItem;
 import model.FileItem;
+import util.ChangeEFSHandler;
+import util.ChangeSyncFolderHandler;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -9,7 +11,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-import static util.BrowserEventListeners.*;
 
 /**
  * Сервис синхронизации EFS и syncFolder на диске
@@ -38,13 +39,13 @@ public class SyncService implements Runnable{
         System.out.println("From EFS "+event);
         switch (event.getType()){
             case DELETE:
-                onDeleteEFSFile(event.getEFSItem());
+                ChangeEFSHandler.onDeleteEFSFile(event.getEFSItem());
                 break;
             case CREATE:
-                onCreateEFSFile(event.getEFSItem());
+                ChangeEFSHandler.onCreateEFSFile(event.getEFSItem());
                 break;
             case RENAME:
-                onRenameEFSFIle(event.getEFSItem(), event.getOldName());
+                ChangeEFSHandler.onRenameEFSFIle(event.getEFSItem(), event.getOldName());
                 break;
         }
     }
@@ -60,6 +61,11 @@ public class SyncService implements Runnable{
             case DELETE:
                 break;
             case CREATE:
+                try {
+                    ChangeSyncFolderHandler.onCreateFile(event.getSyncFolderItem());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 break;
             case RENAME:
                 break;

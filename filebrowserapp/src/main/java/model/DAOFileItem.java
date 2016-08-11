@@ -76,6 +76,20 @@ public interface DAOFileItem {
     FileItem getRoot();
 
     /**
+     *
+     * @param path путь в EFS
+     * @return element FileItem
+     */
+    FileItem getItemByPath(String path);
+
+    /**
+     *
+     * @param path
+     * @return added element FileItem
+     */
+    public FileItem addItemByPath(String path);
+
+    /**
      * метод для закрытия сессии
      */
     void close();

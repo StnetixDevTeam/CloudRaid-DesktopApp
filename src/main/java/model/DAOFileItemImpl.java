@@ -9,10 +9,14 @@ import util.EntityUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.Query;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 import java.util.List;
 
 /**
+ * FIXME изменить поле PATH объектов EFSItem на стандартное понятие Path. сейчас Path хранит путь к элементу без его имени, а надо чтобы включало имя
  * @author Cloudraid Dev Team (cloudraid.stnetix.com)
  */
 public class DAOFileItemImpl implements DAOFileItem {
@@ -51,6 +55,20 @@ public class DAOFileItemImpl implements DAOFileItem {
 
 
         return result.get(0);
+    }
+
+    @Override
+    public FileItem getItemByPath(String path) {
+        entityManager.getTransaction().begin();
+        System.out.println("query "+path);
+        //Query query = entityManager.createQuery("SELECT e FROM EFSItem e WHERE e.path = :filePath ");
+        List result = entityManager.createQuery( "SELECT e FROM EFSItem e WHERE e.path = :filePath")
+                .setParameter("filePath", path).getResultList();
+
+        entityManager.getTransaction().commit();
+
+        //entityManager.close();
+        return (FileItem) result.get(0);
     }
 
     @Override
@@ -114,26 +132,18 @@ public class DAOFileItemImpl implements DAOFileItem {
     }
 
     public FileItem addItem(String name, boolean isDir, long size){
-        FileItem item = new EFSItem(name, new Date(), isDir, (EFSItem)currentParent);
+        EFSItem item = new EFSItem(name, new Date(), isDir, (EFSItem)currentParent);
 
         //EntityManager entityManager = entityManagerFactory.createEntityManager();
+        //item.setParent(currentParent);
 
-        entityManager.getTransaction().begin();
-        item.setParent(currentParent);
-
-        item.setPath(setPath());
-        item.setSize(size);
-
-        entityManager.persist(item);
-
-        entityManager.getTransaction().commit();
-
-        //entityManager.close();
-        currentContent.add(item);
-        if (item.getParent().isSync()) item.setSync(true);
-
-
-        return item;
+        return addEFSItem(item);
+    }
+    public FileItem addItemByPath(String path){
+        Path filePath = Paths.get(path);
+        EFSItem item = new EFSItem(filePath.getFileName().toString(), new Date(), true, (EFSItem) getItemByPath(filePath.getParent().toString()));
+        //item.setSize(1234);
+        return addEFSItem(item);
     }
 
     public void update(FileItem item) {
@@ -173,10 +183,12 @@ public class DAOFileItemImpl implements DAOFileItem {
     }
 
     private String setPath(){
+
         //EFSItem parent = (EFSItem) ((EFSItem)currentContent.get(0)).getParent();
         String parentPath;
         if (currentParent.getPath() == null) parentPath = "";
         else parentPath = currentParent.getPath()+"/";
+        System.out.println("set Path" + parentPath + currentParent.getName());
         return parentPath + currentParent.getName();
     }
 
@@ -195,6 +207,25 @@ public class DAOFileItemImpl implements DAOFileItem {
 
     public FileItem getCurrentParent(){
         return currentParent;
+    }
+
+    private EFSItem addEFSItem(EFSItem item){
+        entityManager.getTransaction().begin();
+
+        if (item.getPath() == null) item.setPath(setPath());
+        //item.setSize(size);
+
+        entityManager.persist(item);
+
+        entityManager.getTransaction().commit();
+
+        //entityManager.close();
+        System.out.println(item);
+        currentContent.add(item);
+        if (item.getParent().isSync()) item.setSync(true);
+
+
+        return item;
     }
 
 

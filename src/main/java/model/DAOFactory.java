@@ -1,5 +1,7 @@
 package model;
 
+import util.EntityUtil;
+
 import javax.persistence.EntityManager;
 
 /**
@@ -10,8 +12,14 @@ public class DAOFactory {
     private static DAOFileItem fileItemDAOImpl = null;
     private static EntityManager entityManager = null;
 
-    public static synchronized DAOFactory getInstance(EntityManager entityManager) {
+    public static synchronized DAOFactory getInstance() {
         if (instance == null) {
+
+            try {
+                entityManager = EntityUtil.setUp().createEntityManager();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             instance = new DAOFactory(entityManager);
         }
         return instance;

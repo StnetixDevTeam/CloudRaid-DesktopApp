@@ -2,6 +2,7 @@ package controller;
 
 import browserApp.BrowserApp;
 import events.FileBrowserEvent;
+import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -271,8 +272,13 @@ public class MainController implements Initializable {
                     initTreeView();
                     initTableView();
                 }
-                updateFlowView();
-                tableView.refresh();
+
+                Platform.runLater(() -> {
+                    updateFlowView();
+                    tableView.refresh();
+                });
+
+
 
             }
         });
@@ -362,6 +368,7 @@ public class MainController implements Initializable {
     }
 
     private void updateFlowView() {
+
 
         flowViewColumn.getChildren().clear();
         for (FileItem item : items) {

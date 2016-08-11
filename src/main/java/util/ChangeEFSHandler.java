@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 /**
  * Created by Anton on 07.08.2016.
  */
-public class BrowserEventListeners {
+public class ChangeEFSHandler {
     static AppSettings settings = AppSettings.getInstance();
 
     public static Path setCurrentPathInSyncFolder(FileItem i){

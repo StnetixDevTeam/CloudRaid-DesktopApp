@@ -42,14 +42,10 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
 
         settings = AppSettings.getInstance();
-        EntityManager entityManager = null;
-        try {
-            entityManager = EntityUtil.setUp().createEntityManager();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        DAOFactory daoFactory = DAOFactory.getInstance(entityManager);
+
+        DAOFactory daoFactory = DAOFactory.getInstance();
         dataManager = daoFactory.getDAOFileItem();
+
         this.primaryStage = primaryStage;
 
         //dataManager = new DAOFileItemImpl(entityManager);
