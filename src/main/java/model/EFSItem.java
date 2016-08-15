@@ -211,7 +211,7 @@ public class EFSItem implements FileItem, Comparable<EFSItem>{
 
     @Override
     public String toString() {
-        return "EFSItem: name:"+name+" path: "+path+" parent name: "+parent.getName();
+        return name;
     }
 
     @Override
