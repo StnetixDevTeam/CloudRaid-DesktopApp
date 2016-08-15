@@ -2,14 +2,10 @@ package model;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import model.DAOFileItem;
-import model.EFSItem;
-import model.FileItem;
 import util.EntityUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
@@ -61,6 +57,7 @@ public class DAOFileItemImpl implements DAOFileItem {
     public FileItem getItemByPath(String path) {
         entityManager.getTransaction().begin();
         System.out.println("query "+path);
+        path = path.replace("\\", "/");
         //Query query = entityManager.createQuery("SELECT e FROM EFSItem e WHERE e.path = :filePath ");
         List result = entityManager.createQuery( "SELECT e FROM EFSItem e WHERE e.path = :filePath")
                 .setParameter("filePath", path).getResultList();
@@ -68,7 +65,10 @@ public class DAOFileItemImpl implements DAOFileItem {
         entityManager.getTransaction().commit();
 
         //entityManager.close();
-        return (FileItem) result.get(0);
+        if (result.size()>0){
+            return (FileItem) result.get(0);
+        } else return null;
+
     }
 
     @Override
@@ -114,7 +114,15 @@ public class DAOFileItemImpl implements DAOFileItem {
         return result;
     }
 
-    public EFSItem addItem(EFSItem item){
+    public List<FileItem> getAllItems(){
+        entityManager.getTransaction().begin();
+        String query = "from EFSItem";
+        List result = entityManager.createQuery( query, FileItem.class ).getResultList();
+        entityManager.getTransaction().commit();
+        return result;
+    }
+
+    public FileItem addItem(EFSItem item){
         //EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         entityManager.getTransaction().begin();
@@ -137,13 +145,13 @@ public class DAOFileItemImpl implements DAOFileItem {
         //EntityManager entityManager = entityManagerFactory.createEntityManager();
         //item.setParent(currentParent);
 
-        return addEFSItem(item);
+        return addItem(item);
     }
     public FileItem addItemByPath(String path){
         Path filePath = Paths.get(path);
         EFSItem item = new EFSItem(filePath.getFileName().toString(), new Date(), true, (EFSItem) getItemByPath(filePath.getParent().toString()));
         //item.setSize(1234);
-        return addEFSItem(item);
+        return addItem(item);
     }
 
     public void update(FileItem item) {
@@ -209,7 +217,7 @@ public class DAOFileItemImpl implements DAOFileItem {
         return currentParent;
     }
 
-    private EFSItem addEFSItem(EFSItem item){
+    public FileItem addItem(FileItem item){
         entityManager.getTransaction().begin();
 
         if (item.getPath() == null) item.setPath(setPath());

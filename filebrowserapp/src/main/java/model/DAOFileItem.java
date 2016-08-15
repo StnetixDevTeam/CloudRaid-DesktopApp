@@ -89,6 +89,8 @@ public interface DAOFileItem {
      */
     public FileItem addItemByPath(String path);
 
+    public FileItem addItem(FileItem item);
+
     /**
      * метод для закрытия сессии
      */

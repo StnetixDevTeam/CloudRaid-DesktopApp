@@ -20,8 +20,10 @@ public class ChangeEFSHandler {
     public static Path setCurrentPathInSyncFolder(FileItem i){
 
         Path syncFolder = Paths.get(settings.getProperty(AppSettings.PROPERTIES_KEYS.SINCHRONIZATION_PATH));
-        String path = i.getPath().replace("root/", "") + FileSystems.getDefault().getSeparator() + i.getName();
-        return syncFolder.resolve(path);
+        String path = i.getPath().replace("/root/", "");
+        Path newPath = syncFolder.resolve(path);
+        System.out.println("new path "+newPath);
+        return newPath;
     }
 
     public static void onRenameEFSFIle(FileItem i, String oldName){

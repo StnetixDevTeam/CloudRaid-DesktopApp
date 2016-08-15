@@ -1,6 +1,7 @@
 package model;
 
 import javax.persistence.*;
+import java.nio.file.Path;
 import java.util.Date;
 
 /**
@@ -9,6 +10,8 @@ import java.util.Date;
 @Entity
 @Table(name = "filesystem")
 public class EFSItem implements FileItem, Comparable<EFSItem>{
+
+    public static final String pathSeparator = "/";
 
     @Id
     @Column(name = "ID")
@@ -84,12 +87,24 @@ public class EFSItem implements FileItem, Comparable<EFSItem>{
 
     }
 
+    public EFSItem(Path path){
+        this.name = path.getFileName().toString().replace("\\", "/");
+        this.isDir = true;
+        this.modified = new Date();
+    }
+
     private void setPath(){
-        String parentPath;
+        if (parent==null) {
+            path = pathSeparator+name;
+            return;
+        }
+        path = parent.getPath()+pathSeparator+name;
+
+        /*String parentPath;
         if (parent == null) return;
         if (parent.getPath() == null) parentPath = "";
         else parentPath = parent.getPath()+"/";
-        this.path = parentPath + parent.getName();
+        this.path = parentPath + parent.getName();*/
     }
 
     public long getId() {
